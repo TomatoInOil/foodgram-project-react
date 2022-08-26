@@ -1,5 +1,6 @@
-from django.db import models
+from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
 
@@ -13,11 +14,19 @@ class Ingredient(models.Model):
     )
 
 
+class Tag(models.Model):
+    """Модель тегов."""
+
+    name = models.CharField(max_length=200, verbose_name="Название")
+    color = ColorField(default="#FF0000", format="hex", verbose_name="Цвет")
+    slug = models.SlugField(max_length=200)
+
+
 class Recipe(models.Model):
     """Модель рецептов."""
 
     name = models.CharField(max_length=200, verbose_name="Название")
-    tags = models.ManyToManyField("Tags", verbose_name="Теги")
+    tags = models.ManyToManyField(Tag, verbose_name="Теги")
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Автор"
     )
