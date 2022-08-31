@@ -13,6 +13,13 @@ class Ingredient(models.Model):
         max_length=16, verbose_name="Единицы измерения"
     )
 
+    class Meta:
+        verbose_name = "Ингредиент"
+        verbose_name_plural = "Ингредиенты"
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class Tag(models.Model):
     """Модель тегов."""
@@ -20,6 +27,13 @@ class Tag(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
     color = ColorField(default="#FF0000", format="hex", verbose_name="Цвет")
     slug = models.SlugField(max_length=200)
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Recipe(models.Model):
@@ -41,6 +55,13 @@ class Recipe(models.Model):
     cooking_time = models.IntegerField(verbose_name="Время приготовления")
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    class Meta:
+        verbose_name = "Рецепт"
+        verbose_name_plural = "Рецепты"
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class IngredientQuantity(models.Model):
     """Связь рецепта и ингредиента с указанием количества."""
@@ -52,3 +73,12 @@ class IngredientQuantity(models.Model):
         Ingredient, on_delete=models.CASCADE, verbose_name="Ингредиент"
     )
     number = models.FloatField(verbose_name="Количество")
+
+    class Meta:
+        verbose_name = "Связь рецепт-ингредиент"
+        verbose_name_plural = "Связи рецепт-ингредиент"
+
+    def __str__(self) -> str:
+        recipe_id = self.recipe.id
+        ingredient_id = self.ingredient.id
+        return f"В рецепт {recipe_id} входит ингредиент {ingredient_id}"
