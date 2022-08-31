@@ -1,8 +1,12 @@
+import json
 import os
+import sys
 from typing import Any, Optional
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+
+from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
@@ -17,6 +21,23 @@ class Command(BaseCommand):
         """
         Читает json файл, с помощью Django ORM создаёт объекты и сохраняет.
         """
-        os.chdir(settings.INGREDIENTS_JSON_DIR)
+        try:
+            os.chdir(settings.INGREDIENTS_JSON_DIR)
+        except FileNotFoundError:
+            print(
+                "Файл не найден, проверьте путь INGREDIENTS_JSON_DIR,"
+                " указанный в settings.py, на правильность."
+            )
+            sys.exit()
 
-        print("Команда успешно закончила своё выполнение.")
+        with open("ingredients.json") as file:
+            ingredient_list = json.load(file)
+            count = 0
+            for ingredient in ingredient_list:
+                Ingredient.objects.create(
+                    name=ingredient["name"],
+                    measurement_unit=ingredient["measurement_unit"],
+                )
+                count += 1
+                print(f"В БД занесён {count} ингредиент")
+        print("Команда закончила своё выполнение.")
