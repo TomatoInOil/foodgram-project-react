@@ -31,7 +31,7 @@ class Subscription(models.Model):
                 name="excluding_duplicate_subscriptions",
             ),
             models.CheckConstraint(
-                check=~models.Q(user=models.F("author")),
+                check=~models.Q(subscriber=models.F("author")),
                 name="author_cannot_subscribe_to_himself.",
             ),
         ]
