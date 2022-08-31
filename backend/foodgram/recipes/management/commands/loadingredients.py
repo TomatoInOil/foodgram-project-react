@@ -30,14 +30,15 @@ class Command(BaseCommand):
             )
             sys.exit()
 
-        with open("ingredients.json") as file:
+        with open("ingredients.json", "r", encoding="utf-8") as file:
             ingredient_list = json.load(file)
             count = 0
+            number = len(ingredient_list)
             for ingredient in ingredient_list:
                 Ingredient.objects.create(
                     name=ingredient["name"],
                     measurement_unit=ingredient["measurement_unit"],
                 )
                 count += 1
-                print(f"В БД занесён {count} ингредиент")
+                print(f"В БД занесён {count}/{number} ингредиент")
         print("Команда закончила своё выполнение.")
