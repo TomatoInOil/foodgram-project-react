@@ -18,9 +18,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     
     "recipes",
+    "users",
     "interaction",
 
     "colorfield",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -95,3 +97,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 INGREDIENTS_JSON_DIR = Path.joinpath(BASE_DIR, "static/data/")
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
