@@ -2,11 +2,15 @@ from rest_framework import filters
 from rest_framework import viewsets
 
 from recipes.viewsets import ListRetrieveViewSet
-from recipes.serializers import IngredientSerializer, RecipeSerializer
-from recipes.models import Ingredient, Recipe
+from recipes.serializers import (
+    IngredientSerializer,
+    RecipeSerializer,
+    TagSerializer,
+)
+from recipes.models import Ingredient, Recipe, Tag
 
 
-class IngredientsViewSet(ListRetrieveViewSet):
+class IngredientViewSet(ListRetrieveViewSet):
     """Представление для ингредиентов.
     Обеспечивает получения списка ингредиентов или информации об одном из них.
     """
@@ -17,7 +21,16 @@ class IngredientsViewSet(ListRetrieveViewSet):
     search_fields = ["^name"]
 
 
-class RecipesViewSet(viewsets.ModelViewSet):
+class TagViewSet(ListRetrieveViewSet):
+    """Представление для тегов.
+    Обеспечивает получение списка тегов или информации об одном из них.
+    """
+
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
     """Представление для рецептов.
     Обеспечивает CRUD для рецептов.
     """
