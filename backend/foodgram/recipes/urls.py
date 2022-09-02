@@ -6,7 +6,8 @@ from recipes import views
 app_name = "recipes"
 
 router = routers.DefaultRouter()
-router.register(r"ingredients", views.IngredientViewSet)
+router.register(r"ingredients", views.IngredientsViewSet)
+router.register(r"recipes", views.RecipesViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
