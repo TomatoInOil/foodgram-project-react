@@ -22,11 +22,13 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор для модели рецептов."""
 
+    tags = TagSerializer(many=True)
+
     class Meta:
         model = Recipe
         fields = [
             "id",
-            # "tags",
+            "tags",
             # "author",
             # "ingredients",
             # "is_favorited",
