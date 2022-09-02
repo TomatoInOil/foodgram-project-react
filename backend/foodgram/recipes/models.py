@@ -44,12 +44,6 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Автор"
     )
-    ingredients = models.ManyToManyField(
-        Ingredient,
-        through="IngredientQuantity",
-        through_fields=("recipe", "ingredient"),
-        verbose_name="Ингредиенты",
-    )
     image = models.ImageField(verbose_name="Картинка")
     text = models.TextField(verbose_name="Текстовое описание")
     cooking_time = models.IntegerField(verbose_name="Время приготовления")
@@ -67,12 +61,18 @@ class IngredientQuantity(models.Model):
     """Связь рецепта и ингредиента с указанием количества."""
 
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name="Рецепт"
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="ingredients",
+        verbose_name="Рецепт",
     )
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, verbose_name="Ингредиент"
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name="recipes",
+        verbose_name="Ингредиент",
     )
-    number = models.FloatField(verbose_name="Количество")
+    amount = models.FloatField(verbose_name="Количество")
 
     class Meta:
         verbose_name = "Связь рецепт-ингредиент"

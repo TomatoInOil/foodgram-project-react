@@ -35,5 +35,5 @@ class RecipeViewSet(viewsets.ModelViewSet):
     Обеспечивает CRUD для рецептов.
     """
 
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.all().prefetch_related("ingredients", "tags")
     serializer_class = RecipeSerializer
