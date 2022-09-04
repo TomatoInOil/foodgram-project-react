@@ -19,8 +19,12 @@ INSTALLED_APPS = [
     
     "recipes",
     "interaction",
+    "users",
 
     "colorfield",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -95,3 +99,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 INGREDIENTS_JSON_DIR = Path.joinpath(BASE_DIR, "static/data/")
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+}
