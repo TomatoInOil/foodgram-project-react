@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django.db.models.expressions
 
 
 class Migration(migrations.Migration):
@@ -16,18 +15,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Subscription',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subs_to_him', to=settings.AUTH_USER_MODEL, verbose_name='Автор рецепта')),
-                ('subscriber', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='his_subs', to=settings.AUTH_USER_MODEL, verbose_name='Заинтересованный кулинар')),
-            ],
-            options={
-                'verbose_name': 'Подписка',
-                'verbose_name_plural': 'Подписки',
-            },
-        ),
         migrations.CreateModel(
             name='ShoppingList',
             fields=[
@@ -51,13 +38,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Список избранных рецептов',
                 'verbose_name_plural': 'Списки избранных рецептов',
             },
-        ),
-        migrations.AddConstraint(
-            model_name='subscription',
-            constraint=models.UniqueConstraint(fields=('subscriber', 'author'), name='excluding_duplicate_subscriptions'),
-        ),
-        migrations.AddConstraint(
-            model_name='subscription',
-            constraint=models.CheckConstraint(check=models.Q(('subscriber', django.db.models.expressions.F('author')), _negated=True), name='author_cannot_subscribe_to_himself.'),
         ),
     ]

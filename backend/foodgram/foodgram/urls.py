@@ -6,4 +6,5 @@ API_PATH = "api/"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(API_PATH, include("recipes.urls", namespace="recipes")),
+    path(API_PATH, include("users.urls", namespace="users")),
 ]

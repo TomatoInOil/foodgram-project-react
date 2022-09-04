@@ -2,7 +2,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = ("django-insecure-2&rsbmp7f%6@1__2x9(=d%=cvis0))-x=#h&0_m@*ux17)8ms7")
+SECRET_KEY = (
+    "django-insecure-2&rsbmp7f%6@1__2x9(=d%=cvis0))-x=#h&0_m@*ux17)8ms7"
+)
 
 DEBUG = True
 
@@ -16,14 +18,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
+
     "recipes",
     "users",
     "interaction",
 
     "colorfield",
-    "rest_framework",
     "django_filters",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -101,7 +105,10 @@ INGREDIENTS_JSON_DIR = Path.joinpath(BASE_DIR, "static/data/")
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
 }
