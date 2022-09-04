@@ -112,3 +112,20 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
 }
+
+DJOSER = {
+    "USER_CREATE_PASSWORD_RETYPE": False,
+    "SEND_ACTIVATION_EMAIL": False,
+    "HIDE_USERS": False,
+    "PERMISSIONS": {
+        "user": ["rest_framework.permissions.IsAuthenticated"],
+        "user_list": ["rest_framework.permissions.IsAuthenticated"],
+        "activation": ["rest_framework.permissions.IsAdminUser"],
+        "password_reset": ["rest_framework.permissions.IsAdminUser"],
+        "password_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
+        "set_username": ["rest_framework.permissions.IsAdminUser"],
+        "username_reset": ["rest_framework.permissions.IsAdminUser"],
+        "username_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
+        "user_delete": ["rest_framework.permissions.IsAdminUser"],
+    },
+}
