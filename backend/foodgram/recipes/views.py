@@ -1,7 +1,7 @@
 from rest_framework import filters
 from rest_framework import viewsets
 
-from recipes.viewsets import ListRetrieveViewSet
+from custom.viewsets import ListRetrieveViewSet
 from recipes.serializers import (
     IngredientSerializer,
     RecipeSerializer,

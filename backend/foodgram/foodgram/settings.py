@@ -19,9 +19,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "recipes",
-    "users",
-    "interaction",
+    "custom.apps.CustomConfig",
+    "recipes.apps.RecipesConfig",
+    "users.apps.UsersConfig",
+    "interaction.apps.InteractionConfig",
 
     "colorfield",
     "django_filters",
@@ -68,6 +69,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -105,9 +107,7 @@ INGREDIENTS_JSON_DIR = Path.joinpath(BASE_DIR, "static/data/")
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),

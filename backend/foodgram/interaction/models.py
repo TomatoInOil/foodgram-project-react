@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 
 from recipes.models import Recipe
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class RecipesList(models.Model):

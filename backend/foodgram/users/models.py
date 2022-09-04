@@ -1,7 +1,14 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
+
+class User(AbstractUser):
+    """Модель пользователя."""
+
+    email = models.EmailField(verbose_name="Почта", unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
 
 class Subscription(models.Model):
