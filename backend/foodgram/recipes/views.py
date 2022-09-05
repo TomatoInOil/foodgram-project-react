@@ -19,6 +19,7 @@ class IngredientViewSet(ListRetrieveViewSet):
     queryset = Ingredient.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ["^name"]
+    pagination_class = None
 
 
 class TagViewSet(ListRetrieveViewSet):
@@ -28,6 +29,7 @@ class TagViewSet(ListRetrieveViewSet):
 
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
