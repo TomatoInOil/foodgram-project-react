@@ -128,4 +128,8 @@ DJOSER = {
         "username_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
         "user_delete": ["rest_framework.permissions.IsAdminUser"],
     },
+    "SERIALIZERS": {
+        "user": "users.serializers.UserSerializer",
+        "current_user": "users.serializers.UserSerializer",
+    }
 }
