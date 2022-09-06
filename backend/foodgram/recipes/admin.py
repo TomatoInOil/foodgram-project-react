@@ -27,9 +27,6 @@ class RecipeAdmin(admin.ModelAdmin):
         "pk",
         "name",
         "author",
-        "image",
-        "text",
-        "cooking_time",
         "pub_date",
     )
     list_display_links = ("pk", "name")
