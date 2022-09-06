@@ -5,8 +5,14 @@ from rest_framework import viewsets
 class ListRetrieveViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
-    """
-    Вьюсет обеспечивает `retrieve` и `list` действия.
-    """
+    """Набор представлений, обеспечивающий `retrieve` и `list` действия."""
+
+    pass
+
+
+class CreateDestroyViewSet(
+    mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
+):
+    """Набор представлений, обеспечивающий `create` и `destroy` действия."""
 
     pass
