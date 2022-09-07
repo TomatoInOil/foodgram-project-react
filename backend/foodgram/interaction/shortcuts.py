@@ -12,7 +12,7 @@ def get_favorites_list(user):
 
 
 def create_error_response(msg):
-    """Возвращает объект Response с ошибкой."""
+    """Возвращает объект Response с ошибкой 400."""
     return Response(
         data={"error": msg},
         status=status.HTTP_400_BAD_REQUEST,
@@ -20,7 +20,7 @@ def create_error_response(msg):
 
 
 def get_selected_recipe_and_favorite_recipes(request, *args, **kwargs):
-    """По запросу находит выбранный рецепт и список избранного."""
+    """По запросу находит выбранный рецепт и список избранного из запроса."""
     current_user = request.user
     favorite_recipes = get_favorites_list(user=current_user).recipes
 
