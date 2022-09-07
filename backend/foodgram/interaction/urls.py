@@ -9,5 +9,10 @@ urlpatterns = [
         "recipes/<int:recipe_id>/favorite/",
         views.FavoriteRecipesListView.as_view(),
         name="favorite",
-    )
+    ),
+    path(
+        "recipes/<int:recipe_id>/shopping_cart/",
+        views.ShoppingListView.as_view(),
+        name="favorite",
+    ),
 ]

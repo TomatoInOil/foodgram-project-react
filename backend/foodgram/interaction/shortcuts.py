@@ -3,12 +3,11 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from recipes.models import Recipe
-from interaction.models import FavoriteRecipesList
 
 
-def get_favorites_list(user):
-    """Возвращает список избранного пользователя."""
-    return FavoriteRecipesList.objects.get_or_create(user=user)[0]
+def get_or_create_obj_owned_by_user(user, model):
+    """Возвращает или создаёт объект принадлежащий пользователю."""
+    return model.objects.get_or_create(user=user)[0]
 
 
 def create_error_response(msg):
@@ -19,12 +18,16 @@ def create_error_response(msg):
     )
 
 
-def get_selected_recipe_and_favorite_recipes(request, *args, **kwargs):
-    """По запросу находит выбранный рецепт и список избранного из запроса."""
+def get_selected_recipe_and_recipes_from_model_on_request(
+    model, request, *args, **kwargs
+):
+    """По запросу находит выбранный рецепт и список пользователя из запроса."""
     current_user = request.user
-    favorite_recipes = get_favorites_list(user=current_user).recipes
+    recipes_from_list = get_or_create_obj_owned_by_user(
+        current_user, model
+    ).recipes
 
     selected_recipe = get_object_or_404(
         klass=Recipe, pk=kwargs.get("recipe_id", None)
     )
-    return favorite_recipes, selected_recipe
+    return recipes_from_list, selected_recipe

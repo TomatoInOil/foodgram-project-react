@@ -1,7 +1,7 @@
 from recipes.serializers import RecipeSerializer
 
 
-class FavoriteRecipeSerializer(RecipeSerializer):
+class RecipeSerializer(RecipeSerializer):
     """Сериализатор для рецепта, добавленного в избранное."""
 
     class Meta(RecipeSerializer.Meta):
