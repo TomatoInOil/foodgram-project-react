@@ -70,3 +70,11 @@ class ShoppingListView(RecipesListView):
 
     name_of_list = "покупок"
     model = ShoppingList
+
+
+class DownloadShoppingListView(views.APIView):
+    """Представление для скачивания списка покупок."""
+
+    def get(self, request, *args, **kwargs):
+        """..."""
+        pass
