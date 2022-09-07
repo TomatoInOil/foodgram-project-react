@@ -1,3 +1,4 @@
+from django.utils import timezone as tz
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,16 +19,17 @@ def create_error_response(msg):
     )
 
 
-def get_selected_recipe_and_recipes_from_model_on_request(
-    model, request, *args, **kwargs
-):
-    """По запросу находит выбранный рецепт и список пользователя из запроса."""
+def get_recipes_from_model_on_request(model, request, *args, **kwargs):
+    """Находит список пользователя по запросу."""
     current_user = request.user
-    recipes_from_list = get_or_create_obj_owned_by_user(
-        current_user, model
-    ).recipes
+    return get_or_create_obj_owned_by_user(current_user, model).recipes
 
-    selected_recipe = get_object_or_404(
-        klass=Recipe, pk=kwargs.get("recipe_id", None)
-    )
-    return recipes_from_list, selected_recipe
+
+def get_selected_recipe_on_request(request, *args, **kwargs):
+    """Находит выбранный рецепт по запросу."""
+    return get_object_or_404(klass=Recipe, pk=kwargs.get("recipe_id", None))
+
+
+def get_year():
+    """Возвращает текущий год."""
+    return tz.now().year
