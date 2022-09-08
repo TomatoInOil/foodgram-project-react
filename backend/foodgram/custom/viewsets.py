@@ -8,11 +8,3 @@ class ListRetrieveViewSet(
     """Набор представлений, обеспечивающий `retrieve` и `list` действия."""
 
     pass
-
-
-class CreateDestroyViewSet(
-    mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
-):
-    """Набор представлений, обеспечивающий `create` и `destroy` действия."""
-
-    pass
