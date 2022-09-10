@@ -12,8 +12,7 @@ class AlphabeticalFilter(admin.SimpleListFilter):
     def setup(cls, field):
         """Настройка класса для использования в ModelAdmin.list_filter."""
         attrs = dict(parameter_name=field, title=field)
-        cls = type("cls.__name__" + field, (cls,), attrs)
-        return cls
+        return type("cls.__name__" + field, (cls,), attrs)
 
     def lookups(self, request, model_admin):
         """Возвращает список кортежей.
@@ -33,6 +32,7 @@ class AlphabeticalFilter(admin.SimpleListFilter):
             return queryset.filter(
                 (f"{self.parameter_name}__istartswith", self.value()),
             )
+        return None
 
 
 @admin.register(User)

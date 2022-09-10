@@ -35,6 +35,7 @@ def add_selected_recipe_to_recipes_list(
             msg=f"Рецепт уже добавлен в список {name_of_list}."
         )
     recipes_from_list.add(selected_recipe)
+    return None
 
 
 def delete_selected_recipe_from_recipes_list(
@@ -51,6 +52,7 @@ def delete_selected_recipe_from_recipes_list(
             msg=f"Рецепта нет в списке {name_of_list}."
         )
     recipes_from_list.remove(selected_recipe)
+    return None
 
 
 def get_filepath_related_to_shopping_list(shopping_list):
@@ -60,11 +62,10 @@ def get_filepath_related_to_shopping_list(shopping_list):
         Path.mkdir(settings.MEDIA_ROOT)
     if not shopping_lists_path.exists():
         Path.mkdir(shopping_lists_path)
-    filepath = Path.joinpath(
+    return Path.joinpath(
         shopping_lists_path,
         f"shopping_list_{shopping_list.id}.txt",
     )
-    return filepath
 
 
 def write_text_of_shopping_list_to_file(filepath, shopping_list, request):
