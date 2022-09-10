@@ -3,7 +3,7 @@ from rest_framework import status, views
 from rest_framework.response import Response
 
 from interaction.models import FavoriteRecipesList, ShoppingList
-from interaction.serializers import RecipeSerializer
+from custom.serializers import ShortRecipeSerializer
 from interaction.sevices import (
     add_selected_recipe_to_recipes_list,
     delete_selected_recipe_from_recipes_list,
@@ -36,7 +36,7 @@ class RecipesListView(views.APIView):
         if error_response:
             return error_response
         return Response(
-            data=RecipeSerializer(instance=selected_recipe).data,
+            data=ShortRecipeSerializer(instance=selected_recipe).data,
             status=status.HTTP_201_CREATED,
         )
 
