@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "custom.apps.CustomConfig",
+    "services.apps.ServicesConfig",
     "recipes.apps.RecipesConfig",
     "users.apps.UsersConfig",
     "interaction.apps.InteractionConfig",

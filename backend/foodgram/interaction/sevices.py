@@ -4,10 +4,10 @@ from typing import Union
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone as tz
-from rest_framework import status
 from rest_framework.response import Response
 
 from recipes.models import Recipe
+from services.services import create_response_with_error_message
 
 
 def get_or_create_obj_owned_by_current_user(request, model):
@@ -31,7 +31,7 @@ def add_selected_recipe_to_recipes_list(
         request, model
     ).recipes
     if selected_recipe in recipes_from_list.all():
-        return _create_response_with_error_message(
+        return create_response_with_error_message(
             msg=f"Рецепт уже добавлен в список {name_of_list}."
         )
     recipes_from_list.add(selected_recipe)
@@ -47,7 +47,7 @@ def delete_selected_recipe_from_recipes_list(
         request, model
     ).recipes
     if selected_recipe not in recipes_from_list.all():
-        return _create_response_with_error_message(
+        return create_response_with_error_message(
             msg=f"Рецепта нет в списке {name_of_list}."
         )
     recipes_from_list.remove(selected_recipe)
@@ -75,16 +75,6 @@ def write_text_of_shopping_list_to_file(filepath, shopping_list, request):
         )
         file.writelines(lines)
         file.close()
-
-
-def _create_response_with_error_message(
-    msg, status=status.HTTP_400_BAD_REQUEST
-):
-    """Возвращает объект Response с сообщением об ошибке."""
-    return Response(
-        data={"error": msg},
-        status=status,
-    )
 
 
 def _create_lines_of_text_document_from_shopping_list(shopping_list, request):

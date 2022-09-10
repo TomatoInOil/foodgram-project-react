@@ -22,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         """Проверяет наличие подписки пользователя на автора."""
-        if self.context["request"].user in obj.subs_to_him.all():
-            return True
+        current_user = self.context["request"].user
+        if current_user.is_authenticated:
+            return obj.subs_to_him.filter(subscriber=current_user).exists()
         return False
