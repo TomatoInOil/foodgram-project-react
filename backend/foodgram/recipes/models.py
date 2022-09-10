@@ -1,8 +1,8 @@
 from colorfield.fields import ColorField
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class Ingredient(models.Model):
@@ -44,16 +44,12 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Автор"
     )
-    ingredients = models.ManyToManyField(
-        Ingredient,
-        through="IngredientQuantity",
-        through_fields=("recipe", "ingredient"),
-        verbose_name="Ингредиенты",
-    )
     image = models.ImageField(verbose_name="Картинка")
     text = models.TextField(verbose_name="Текстовое описание")
     cooking_time = models.IntegerField(verbose_name="Время приготовления")
-    pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    pub_date = models.DateTimeField(
+        auto_now_add=True, db_index=True, verbose_name="Дата публикации"
+    )
 
     class Meta:
         verbose_name = "Рецепт"
@@ -67,12 +63,18 @@ class IngredientQuantity(models.Model):
     """Связь рецепта и ингредиента с указанием количества."""
 
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name="Рецепт"
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="ingredients",
+        verbose_name="Рецепт",
     )
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, verbose_name="Ингредиент"
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name="recipes",
+        verbose_name="Ингредиент",
     )
-    number = models.FloatField(verbose_name="Количество")
+    amount = models.FloatField(verbose_name="Количество")
 
     class Meta:
         verbose_name = "Связь рецепт-ингредиент"

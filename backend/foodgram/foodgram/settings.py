@@ -2,7 +2,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = ("django-insecure-2&rsbmp7f%6@1__2x9(=d%=cvis0))-x=#h&0_m@*ux17)8ms7")
+SECRET_KEY = (
+    "django-insecure-2&rsbmp7f%6@1__2x9(=d%=cvis0))-x=#h&0_m@*ux17)8ms7"
+)
 
 DEBUG = True
 
@@ -16,11 +18,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
-    "recipes",
-    "interaction",
+
+    "custom.apps.CustomConfig",
+    "services.apps.ServicesConfig",
+    "recipes.apps.RecipesConfig",
+    "users.apps.UsersConfig",
+    "interaction.apps.InteractionConfig",
 
     "colorfield",
+    "django_filters",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -61,6 +70,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -91,7 +101,46 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/")
+
+MEDIA_URL = "/media/"
+
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 INGREDIENTS_JSON_DIR = Path.joinpath(BASE_DIR, "static/data/")
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 100,
+}
+
+DJOSER = {
+    "USER_CREATE_PASSWORD_RETYPE": False,
+    "SEND_ACTIVATION_EMAIL": False,
+    "HIDE_USERS": False,
+    "PERMISSIONS": {
+        "user": ["rest_framework.permissions.IsAuthenticated"],
+        "user_list": ["rest_framework.permissions.IsAuthenticated"],
+        "activation": ["rest_framework.permissions.IsAdminUser"],
+        "password_reset": ["rest_framework.permissions.IsAdminUser"],
+        "password_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
+        "set_username": ["rest_framework.permissions.IsAdminUser"],
+        "username_reset": ["rest_framework.permissions.IsAdminUser"],
+        "username_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
+        "user_delete": ["rest_framework.permissions.IsAdminUser"],
+    },
+    "SERIALIZERS": {
+        "user": "users.serializers.UserSerializer",
+        "current_user": "users.serializers.UserSerializer",
+    }
+}
