@@ -20,16 +20,16 @@ def get_error_response_if_validation_of_request_subscription_failed(
         "selected_user": selected_user,
         "subscription": None,
     }
-    response = _check_for_match_between_current_and_selected_user(
+    result["response"] = _check_for_match_between_current_and_selected_user(
         current_user, selected_user
     )
-    if response:
-        result["response"] = response
+    if result["response"]:
         return result
     subscription = _get_sub(current_user, selected_user)
-    response = _check_existence_of_subscription(request, subscription)
-    if response:
-        result["response"] = response
+    result["response"] = _check_existence_of_subscription(
+        request, subscription
+    )
+    if result["response"]:
         return result
     result["subscription"] = subscription
     return result
