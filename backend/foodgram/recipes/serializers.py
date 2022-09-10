@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from recipes.models import Ingredient, IngredientQuantity, Recipe, Tag
+from users.serializers import UserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -37,18 +38,35 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True)
     ingredients = IngredientQuantitySerializer(many=True)
+    author = UserSerializer()
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
         fields = (
             "id",
             "tags",
-            # "author",
+            "author",
             "ingredients",
-            # "is_favorited",
-            # "is_in_shopping_cart",
+            "is_favorited",
+            "is_in_shopping_cart",
             "name",
             "image",
             "text",
             "cooking_time",
         )
+
+    def get_is_favorited(self, obj):
+        """Есть ли рецепт в списке избранного текущего пользователя."""
+        current_user = self.context["request"].user
+        if current_user.is_authenticated:
+            return obj.favoriterecipeslists.filter(user=current_user).exists()
+        return False
+
+    def get_is_in_shopping_cart(self, obj):
+        """Есть ли рецепт в списке покупок текущего пользователя."""
+        current_user = self.context["request"].user
+        if current_user.is_authenticated:
+            return obj.shoppinglists.filter(user=current_user).exists()
+        return False
