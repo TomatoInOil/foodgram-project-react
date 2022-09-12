@@ -41,12 +41,12 @@ class UserWithRecipesSerializer(UserSerializer):
 
     def get_recipes(self, obj):
         "Получить рецепты пользователя, написанные им."
-        recipes_limit = int(
-            self.context.get("request").query_params.get("recipes_limit")
+        recipes_limit = self.context.get("request").query_params.get(
+            "recipes_limit"
         )
         if recipes_limit:
             return ShortRecipeSerializer(
-                instance=obj.recipes.all()[:recipes_limit], many=True
+                instance=obj.recipes.all()[: int(recipes_limit)], many=True
             ).data
         return ShortRecipeSerializer(
             instance=obj.recipes.all(), many=True
