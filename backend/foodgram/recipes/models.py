@@ -36,6 +36,11 @@ class Tag(models.Model):
         return self.name
 
 
+def recipe_directory_path(instance, filename):
+    """Формирует путь для сохранения картинки рецепта."""
+    return "user_{0}/{1}".format(instance.author_id, filename)
+
+
 class Recipe(models.Model):
     """Модель рецептов."""
 
@@ -47,7 +52,9 @@ class Recipe(models.Model):
         verbose_name="Автор",
         related_name="recipes",
     )
-    image = models.ImageField(verbose_name="Картинка")
+    image = models.ImageField(
+        verbose_name="Картинка", upload_to=recipe_directory_path
+    )
     text = models.TextField(verbose_name="Текстовое описание")
     cooking_time = models.IntegerField(verbose_name="Время приготовления")
     pub_date = models.DateTimeField(
