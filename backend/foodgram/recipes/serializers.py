@@ -70,3 +70,11 @@ class RecipeSerializer(serializers.ModelSerializer):
         if current_user.is_authenticated:
             return obj.shoppinglists.filter(user=current_user).exists()
         return False
+
+
+class ShortRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор рецепта для вложенного использования в качестве поля."""
+
+    class Meta(serializers.ModelSerializer):
+        model = Recipe
+        fields = ("id", "name", "image", "cooking_time")

@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from custom.serializers import ShortRecipeSerializer
+
 User = get_user_model()
 
 
@@ -26,3 +28,30 @@ class UserSerializer(serializers.ModelSerializer):
         if current_user.is_authenticated:
             return obj.subs_to_him.filter(subscriber=current_user).exists()
         return False
+
+
+class UserWithRecipesSerializer(UserSerializer):
+    """Сериализатор пользователя с добавлением им написанных рецептов."""
+
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ["recipes", "recipes_count"]
+
+    def get_recipes(self, obj):
+        "Получить рецепты пользователя, написанные им."
+        recipes_limit = self.context.get("request").query_params.get(
+            "recipes_limit"
+        )
+        if recipes_limit:
+            return ShortRecipeSerializer(
+                instance=obj.recipes.all()[: int(recipes_limit)], many=True
+            ).data
+        return ShortRecipeSerializer(
+            instance=obj.recipes.all(), many=True
+        ).data
+
+    def get_recipes_count(self, obj):
+        """Получить количество показанных рецептов."""
+        return obj.recipes.all().count()

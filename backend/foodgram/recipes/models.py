@@ -42,7 +42,10 @@ class Recipe(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
     tags = models.ManyToManyField(Tag, verbose_name="Теги")
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор",
+        related_name="recipes",
     )
     image = models.ImageField(verbose_name="Картинка")
     text = models.TextField(verbose_name="Текстовое описание")
@@ -54,6 +57,7 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
+        ordering = ["-pub_date"]
 
     def __str__(self) -> str:
         return self.name
