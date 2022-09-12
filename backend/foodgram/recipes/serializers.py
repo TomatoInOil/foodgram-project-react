@@ -28,17 +28,6 @@ class IngredientQuantitySerializer(serializers.ModelSerializer):
         model = IngredientQuantity
         fields = ("id", "name", "measurement_unit", "amount")
 
-    # def to_internal_value(self, data):
-    #     internal_data = super().to_internal_value(data)
-
-    #     amount = data.get("amount")
-    #     if not amount:
-    #         exceptions.ValidationError({"amount": "Обязательное поле."})
-    #     if isinstance(amount, float):
-    #         exceptions.ValidationError({"amount": ""})
-
-    #     return internal_data
-
 
 class TagSerializer(serializers.ModelSerializer):
     """Сериализатор для модели тегов."""
@@ -93,14 +82,20 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop("ingredients")
         instance = super().create(validated_data)
 
-        for tag in tags:
-            instance.tags.add(tag)
-        for ingredient in ingredients:
-            IngredientQuantity.objects.create(
-                recipe=instance,
-                ingredient=ingredient["ingredient"],
-                amount=ingredient["amount"],
-            )
+        self._add_tags_and_ingredients_to_recipe(instance, tags, ingredients)
+        instance.save()
+        return instance
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop("tags")
+        ingredients = validated_data.pop("ingredients")
+        instance = super().update(instance, validated_data)
+
+        instance.tags.clear()
+        instance.ingredients.all().delete()
+
+        self._add_tags_and_ingredients_to_recipe(instance, tags, ingredients)
+
         instance.save()
         return instance
 
@@ -126,6 +121,17 @@ class RecipeSerializer(serializers.ModelSerializer):
         internal_data["tags"] = tags
 
         return internal_data
+
+    def _add_tags_and_ingredients_to_recipe(self, instance, tags, ingredients):
+        """Добавить теги и ингредиенты к рецепту."""
+        for tag in tags:
+            instance.tags.add(tag)
+        for ingredient in ingredients:
+            IngredientQuantity.objects.create(
+                recipe=instance,
+                ingredient=ingredient["ingredient"],
+                amount=ingredient["amount"],
+            )
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

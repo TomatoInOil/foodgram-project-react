@@ -8,6 +8,7 @@ from recipes.serializers import (
     TagSerializer,
 )
 from recipes.models import Ingredient, Recipe, Tag
+from recipes.permissions import OnlyAuthorsUpdateDelete
 
 
 class IngredientViewSet(ListRetrieveViewSet):
@@ -43,3 +44,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         .select_related("author")
     )
     serializer_class = RecipeSerializer
+    permission_classes = [OnlyAuthorsUpdateDelete]
+
+    def perform_destroy(self, instance):
+        instance.ingredients.all().delete()
+        return super().perform_destroy(instance)
