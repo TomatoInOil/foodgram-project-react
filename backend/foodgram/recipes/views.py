@@ -1,14 +1,12 @@
-from rest_framework import filters
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
 
 from custom.viewsets import ListRetrieveViewSet
-from recipes.serializers import (
-    IngredientSerializer,
-    RecipeSerializer,
-    TagSerializer,
-)
+from recipes.filtersets import RecipeFilter
 from recipes.models import Ingredient, Recipe, Tag
 from recipes.permissions import OnlyAuthorsUpdateDelete
+from recipes.serializers import (IngredientSerializer, RecipeSerializer,
+                                 TagSerializer)
 
 
 class IngredientViewSet(ListRetrieveViewSet):
@@ -45,6 +43,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     serializer_class = RecipeSerializer
     permission_classes = [OnlyAuthorsUpdateDelete]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
 
     def perform_destroy(self, instance):
         instance.ingredients.all().delete()
