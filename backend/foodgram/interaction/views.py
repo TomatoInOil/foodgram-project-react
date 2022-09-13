@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from rest_framework import status, views
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from interaction.models import FavoriteRecipesList, ShoppingList
 from custom.serializers import ShortRecipeSerializer
@@ -71,6 +72,7 @@ class DownloadShoppingListView(views.APIView):
     """Представление для скачивания списка покупок."""
 
     model = ShoppingList
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         """Отдаёт файл со списком покупок пользователя."""
