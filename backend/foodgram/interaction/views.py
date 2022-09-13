@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from interaction.models import FavoriteRecipesList, ShoppingList
 from custom.serializers import ShortRecipeSerializer
-from interaction.sevices import (
+from services.interaction_sevices import (
     add_selected_recipe_to_recipes_list,
     delete_selected_recipe_from_recipes_list,
     get_filepath_related_to_shopping_list,

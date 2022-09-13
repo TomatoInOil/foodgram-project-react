@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
 from users.serializers import UserWithRecipesSerializer
-from users.services import (
+from services.users_services import (
     get_error_response_if_validation_of_request_subscription_failed,
 )
 from users.models import Subscription
