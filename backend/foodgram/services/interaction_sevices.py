@@ -76,20 +76,17 @@ def write_text_of_shopping_list_to_file(filepath, shopping_list, request):
 
 def _create_lines_of_text_document_from_shopping_list(shopping_list, request):
     """Формирует из списка покупок строки текстового документа."""
+    ingredients = shopping_list.recipes.values_list(
+        "ingredients__ingredient__name",
+        "ingredients__amount",
+        "ingredients__ingredient__measurement_unit",
+    )
     lines = []
-    for recipe in shopping_list.recipes.all():
-        lines.append(f"- - - {recipe.name} - - - \n")
-        recipe_ingredients = recipe.ingredients.select_related(
-            "ingredient"
-        ).all()
-        for ingredient in recipe_ingredients:
-            name = ingredient.ingredient.name
-            amount = str(ingredient.amount)
-            measurement_unit = ingredient.ingredient.measurement_unit
-            lines.append(
-                " ".join(["[ ]", name, amount, measurement_unit, "\n"])
-            )
+    for ingredient in ingredients:
+        lines.append(
+            " ".join([ingredient[0], str(ingredient[1]), ingredient[2], "\n"])
+        )
     host = request.get_host()
     year = tz.now().year
-    lines.append(f"\n {host} {year}")
+    lines.append(f"\n{host} {year}")
     return lines
