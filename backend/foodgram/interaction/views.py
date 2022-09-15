@@ -7,11 +7,10 @@ from interaction.models import FavoriteRecipesList, ShoppingList
 from custom.serializers import ShortRecipeSerializer
 from services.interaction_sevices import (
     add_selected_recipe_to_recipes_list,
+    create_lines_of_text_document_from_shopping_list,
     delete_selected_recipe_from_recipes_list,
-    get_filepath_related_to_shopping_list,
     get_or_create_obj_owned_by_current_user,
     get_selected_recipe_on_request,
-    write_text_of_shopping_list_to_file,
 )
 
 
@@ -79,7 +78,14 @@ class DownloadShoppingListView(views.APIView):
         shopping_list = get_or_create_obj_owned_by_current_user(
             request, self.model
         )
-        filepath = get_filepath_related_to_shopping_list(shopping_list)
-        write_text_of_shopping_list_to_file(filepath, shopping_list, request)
-        with open(filepath, "r", encoding="utf-8") as file:
-            return HttpResponse(file, status=status.HTTP_200_OK)
+        lines = create_lines_of_text_document_from_shopping_list(
+            shopping_list, request
+        )
+        response_content = "\n".join(lines)
+        response = HttpResponse(
+            response_content, content_type="text/plain;charset=UTF-8"
+        )
+        response[
+            "Content-Disposition"
+        ] = "attachment; filename=shopping_list.txt"
+        return response
