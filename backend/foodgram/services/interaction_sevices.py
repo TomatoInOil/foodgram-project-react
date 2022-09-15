@@ -27,9 +27,7 @@ def add_selected_recipe_to_recipes_list(
     """Добавляет выбранный рецепт в список избранных рецептов пользователя.
     Если рецепт уже добавлен в список, возвращает response с ошибкой.
     """
-    recipes_list = get_or_create_obj_owned_by_current_user(
-        request, model
-    )
+    recipes_list = get_or_create_obj_owned_by_current_user(request, model)
     if recipes_list.recipes.filter(pk=selected_recipe.id).exists():
         return create_response_with_error_message(
             msg=f"Рецепт уже добавлен в список {name_of_list}."
@@ -44,14 +42,12 @@ def delete_selected_recipe_from_recipes_list(
     """Удаляет выбранный рецепт из списка избранных рецептов пользователя.
     Если рецепт уже удалён из списка, возвращает response с ошибкой.
     """
-    recipes_from_list = get_or_create_obj_owned_by_current_user(
-        request, model
-    ).recipes
-    if selected_recipe not in recipes_from_list.all():
+    recipes_list = get_or_create_obj_owned_by_current_user(request, model)
+    if not recipes_list.recipes.filter(pk=selected_recipe.id).exists():
         return create_response_with_error_message(
             msg=f"Рецепта нет в списке {name_of_list}."
         )
-    recipes_from_list.remove(selected_recipe)
+    recipes_list.recipes.remove(selected_recipe)
     return None
 
 
