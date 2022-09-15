@@ -17,7 +17,7 @@ def get_or_create_obj_owned_by_current_user(request, model):
 
 def get_selected_recipe_on_request(request, *args, **kwargs):
     """Находит выбранный рецепт по запросу."""
-    recipe_id = kwargs.get("recipe_id", None)
+    recipe_id = kwargs.get("recipe_id")
     return get_object_or_404(klass=Recipe, pk=recipe_id)
 
 
@@ -27,14 +27,14 @@ def add_selected_recipe_to_recipes_list(
     """Добавляет выбранный рецепт в список избранных рецептов пользователя.
     Если рецепт уже добавлен в список, возвращает response с ошибкой.
     """
-    recipes_from_list = get_or_create_obj_owned_by_current_user(
+    recipes_list = get_or_create_obj_owned_by_current_user(
         request, model
-    ).recipes
-    if selected_recipe in recipes_from_list.all():
+    )
+    if recipes_list.recipes.filter(pk=selected_recipe.id).exists():
         return create_response_with_error_message(
             msg=f"Рецепт уже добавлен в список {name_of_list}."
         )
-    recipes_from_list.add(selected_recipe)
+    recipes_list.recipes.add(selected_recipe)
     return None
 
 
