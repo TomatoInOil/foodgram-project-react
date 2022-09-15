@@ -1,4 +1,6 @@
-from rest_framework import exceptions, serializers
+from collections import OrderedDict
+
+from rest_framework import serializers
 
 from users.serializers import UserSerializer
 from recipes.fields import Base64ImageField
@@ -77,6 +79,34 @@ class RecipeSerializer(serializers.ModelSerializer):
             return obj.shoppinglists.filter(user=current_user).exists()
         return False
 
+    def validate_ingredients(self, value):
+        """Исключает дубликаты ингредиентов в рецепте."""
+        seen = []
+        for ingredient_quantity in value:
+            ingredient = ingredient_quantity.get("ingredient")
+            if ingredient in seen:
+                raise serializers.ValidationError(
+                    "Переданные ингредиенты содержат дубликаты."
+                )
+            seen.append(ingredient)
+        return value
+
+    def validate(self, data):
+        """Проверяет теги на наличие и верный тип переданных данных."""
+        tags = data.get("tags")
+        if not tags:
+            raise serializers.ValidationError({"tags": ["Обязательное поле."]})
+        for tag in tags:
+            if not isinstance(tag, Tag) and not isinstance(tag, int):
+                raise serializers.ValidationError(
+                    {"tags": [f"Ожидалось целое число, получено `{tag}`."]}
+                )
+            if not Tag.objects.filter(pk=tag).exists():
+                raise serializers.ValidationError(
+                    {"tags": [f"Тег {tag} не найден."]}
+                )
+        return data
+
     def create(self, validated_data):
         tags = validated_data.pop("tags")
         ingredients = validated_data.pop("ingredients")
@@ -96,42 +126,42 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         self._add_tags_and_ingredients_to_recipe(instance, tags, ingredients)
 
-        instance.save()
         return instance
 
     def to_internal_value(self, data):
-        internal_data = super().to_internal_value(data)
-
-        tag_pks = data.get("tags")
-        if not tag_pks:
-            raise exceptions.ValidationError({"tags": "Обязательное поле."})
-        tags = []
+        errors = OrderedDict()
         try:
-            for tag_pk in tag_pks:
-                tags.append(Tag.objects.get(pk=tag_pk))
-        except Tag.DoesNotExist:
-            raise exceptions.ValidationError(
-                {"tags": f"Тег {tag_pk} не найден."}
-            )
-        except ValueError:
-            tag_pk_type = type(tag_pk)
-            raise exceptions.ValidationError(
-                {"tags": f"Ожидалось целое число, получено {tag_pk_type}"}
-            )
-        internal_data["tags"] = tags
+            data = self.validate(data)
+        except serializers.ValidationError as exc:
+            errors.update(exc.detail)
+        try:
+            internal_data = super().to_internal_value(data)
+        except serializers.ValidationError as exc:
+            errors.update(exc.detail)
+        if errors:
+            raise serializers.ValidationError(errors)
 
+        tags = data["tags"]
+        tag_list = []
+        for tag in tags:
+            tag_list.append(Tag.objects.get(pk=tag))
+        internal_data["tags"] = tags
         return internal_data
 
     def _add_tags_and_ingredients_to_recipe(self, instance, tags, ingredients):
         """Добавить теги и ингредиенты к рецепту."""
         for tag in tags:
-            instance.tags.add(tag)
-        for ingredient in ingredients:
-            IngredientQuantity.objects.create(
+            instance.tags.add(tag, bulk=False)
+        instance.save()
+        ingedient_list = [
+            IngredientQuantity(
                 recipe=instance,
                 ingredient=ingredient["ingredient"],
                 amount=ingredient["amount"],
             )
+            for ingredient in ingredients
+        ]
+        IngredientQuantity.objects.bulk_create(ingedient_list)
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

@@ -56,7 +56,9 @@ class Recipe(models.Model):
         verbose_name="Картинка", upload_to=recipe_directory_path
     )
     text = models.TextField(verbose_name="Текстовое описание")
-    cooking_time = models.IntegerField(verbose_name="Время приготовления")
+    cooking_time = models.PositiveIntegerField(
+        verbose_name="Время приготовления"
+    )
     pub_date = models.DateTimeField(
         auto_now_add=True, db_index=True, verbose_name="Дата публикации"
     )
@@ -90,6 +92,12 @@ class IngredientQuantity(models.Model):
     class Meta:
         verbose_name = "Связь рецепт-ингредиент"
         verbose_name_plural = "Связи рецепт-ингредиент"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recipe", "ingredient"],
+                name="excluding_duplicate_ingredients",
+            ),
+        ]
 
     def __str__(self) -> str:
         recipe_id = self.recipe.id

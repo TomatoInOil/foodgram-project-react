@@ -5,8 +5,11 @@ from custom.viewsets import ListRetrieveViewSet
 from recipes.filtersets import RecipeFilter
 from recipes.models import Ingredient, Recipe, Tag
 from recipes.permissions import OnlyAuthorsUpdateDelete
-from recipes.serializers import (IngredientSerializer, RecipeSerializer,
-                                 TagSerializer)
+from recipes.serializers import (
+    IngredientSerializer,
+    RecipeSerializer,
+    TagSerializer,
+)
 
 
 class IngredientViewSet(ListRetrieveViewSet):
@@ -45,7 +48,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [OnlyAuthorsUpdateDelete]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
-
-    def perform_destroy(self, instance):
-        instance.ingredients.all().delete()
-        return super().perform_destroy(instance)
