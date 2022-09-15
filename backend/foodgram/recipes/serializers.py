@@ -151,13 +151,17 @@ class RecipeSerializer(serializers.ModelSerializer):
     def _add_tags_and_ingredients_to_recipe(self, instance, tags, ingredients):
         """Добавить теги и ингредиенты к рецепту."""
         for tag in tags:
-            instance.tags.add(tag)
-        for ingredient in ingredients:
-            IngredientQuantity.objects.create(
+            instance.tags.add(tag, bulk=False)
+        instance.save()
+        ingedient_list = [
+            IngredientQuantity(
                 recipe=instance,
                 ingredient=ingredient["ingredient"],
                 amount=ingredient["amount"],
             )
+            for ingredient in ingredients
+        ]
+        IngredientQuantity.objects.bulk_create(ingedient_list)
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
