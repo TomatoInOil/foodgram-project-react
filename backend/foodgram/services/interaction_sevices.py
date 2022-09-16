@@ -1,10 +1,11 @@
 from typing import Union
 
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone as tz
 from rest_framework.response import Response
 
-from recipes.models import Recipe
+from recipes.models import Ingredient, Recipe
 from services.services import create_response_with_error_message
 
 
@@ -51,10 +52,14 @@ def delete_selected_recipe_from_recipes_list(
 
 def create_lines_of_text_document_from_shopping_list(shopping_list, request):
     """Формирует из списка покупок строки текстового документа."""
-    ingredients = shopping_list.recipes.values_list(
-        "ingredients__ingredient__name",
-        "ingredients__amount",
-        "ingredients__ingredient__measurement_unit",
+    ingredients = (
+        Ingredient.objects.filter(recipes__recipe__shoppinglists=shopping_list)
+        .annotate(sum_amount=Sum("recipes__amount"))
+        .values_list(
+            "name",
+            "sum_amount",
+            "measurement_unit",
+        )
     )
     lines = []
     for ingredient in ingredients:

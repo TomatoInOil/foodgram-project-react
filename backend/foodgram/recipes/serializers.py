@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from rest_framework import serializers
 
 from users.serializers import UserSerializer
@@ -129,17 +127,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         return instance
 
     def to_internal_value(self, data):
-        errors = OrderedDict()
-        try:
-            data = self.validate(data)
-        except serializers.ValidationError as exc:
-            errors.update(exc.detail)
-        try:
-            internal_data = super().to_internal_value(data)
-        except serializers.ValidationError as exc:
-            errors.update(exc.detail)
-        if errors:
-            raise serializers.ValidationError(errors)
+        data = self.validate(data)
+        internal_data = super().to_internal_value(data)
 
         tags = data["tags"]
         tag_list = []
@@ -151,8 +140,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def _add_tags_and_ingredients_to_recipe(self, instance, tags, ingredients):
         """Добавить теги и ингредиенты к рецепту."""
         for tag in tags:
-            instance.tags.add(tag, bulk=False)
-        instance.save()
+            instance.tags.add(tag)
         ingedient_list = [
             IngredientQuantity(
                 recipe=instance,
