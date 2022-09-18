@@ -1,12 +1,16 @@
 from django_filters import rest_framework as filters
 
-from recipes.models import Recipe
+from recipes.models import Recipe, Tag
 
 
 class RecipeFilter(filters.FilterSet):
     """Фильтр рецептов по тегам, спискам рецептов, авторам."""
 
-    tags = filters.CharFilter(field_name="tags__slug", lookup_expr="iexact")
+    tags = filters.ModelMultipleChoiceFilter(
+        field_name="tags__slug",
+        to_field_name="slug",
+        queryset=Tag.objects.all(),
+    )
     is_favorited = filters.BooleanFilter(
         field_name="favoriterecipeslists__user",
         method="filter_is_in_recipes_list",
