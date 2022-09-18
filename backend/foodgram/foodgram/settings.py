@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SITE_DOMAIN = os.getenv("SITE_DOMAIN", default="localhost")
+SITE_DOMAIN = os.getenv("SITE_DOMAIN", default="127.0.0.1")
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="v3ry-s3cr3t-k3y")
 
