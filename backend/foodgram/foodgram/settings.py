@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+SITE_DOMAIN = os.getenv("SITE_DOMAIN", default="localhost")
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="v3ry-s3cr3t-k3y")
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "backend"]
 
 
 INSTALLED_APPS = [
@@ -105,6 +106,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+STATIC_ROOT = Path.joinpath(BASE_DIR, "static/")
 
 STATIC_URL = "/static/"
 
