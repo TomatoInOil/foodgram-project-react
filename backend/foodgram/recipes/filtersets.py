@@ -29,3 +29,9 @@ class RecipeFilter(filters.FilterSet):
     class Meta:
         model = Recipe
         fields = ["author"]
+
+
+class IngredientFilter(filters.FilterSet):
+    """Фильтр ингредиентов по имени."""
+
+    name = filters.CharFilter(field_name="name", lookup_expr="startswith")

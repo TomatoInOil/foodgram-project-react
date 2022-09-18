@@ -1,8 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets
+from rest_framework import viewsets
 
 from custom.viewsets import ListRetrieveViewSet
-from recipes.filtersets import RecipeFilter
+from recipes.filtersets import IngredientFilter, RecipeFilter
 from recipes.models import Ingredient, Recipe, Tag
 from recipes.permissions import OnlyAuthorsUpdateDelete
 from recipes.serializers import (
@@ -19,8 +19,8 @@ class IngredientViewSet(ListRetrieveViewSet):
 
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["^name"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientFilter
     pagination_class = None
 
 
