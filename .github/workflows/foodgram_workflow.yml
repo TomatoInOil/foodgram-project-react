@@ -66,7 +66,7 @@ jobs:
             cd infra/
             docker-compose stop
             docker-compose rm backend
-            docker system prune -f
+            docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
