@@ -26,7 +26,30 @@ class UserAdmin(UserAdmin):
         "is_staff",
         "is_active",
     )
+    staff_fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        (
+            "Персональная информация",
+            {"fields": ("first_name", "last_name", "username")},
+        ),
+        ("Важные даты", {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "password1", "password2"),
+            },
+        ),
+    )
     date_hierarchy = "date_joined"
+
+    def get_fieldsets(self, request, obj):
+        if request.user.is_superuser:
+            return self.fieldsets
+        else:
+            return self.staff_fieldsets
 
 
 @admin.register(Subscription)
