@@ -30,14 +30,13 @@ class RecipeAdmin(admin.ModelAdmin):
         "pk",
         "name",
         "author",
-        "tags",
         "in_favorites",
         "pub_date",
     )
     list_display_links = ("pk", "name")
     list_filter = (
         AlphabeticalFilter.setup(field="name"),
-        AlphabeticalFilter.setup(field="author__email"),
+        "author",
         "tags",
     )
     date_hierarchy = "pub_date"
