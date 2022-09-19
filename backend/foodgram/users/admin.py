@@ -46,6 +46,8 @@ class UserAdmin(UserAdmin):
     date_hierarchy = "date_joined"
 
     def get_fieldsets(self, request, obj):
+        if not obj:
+            return self.add_fieldsets
         if request.user.is_superuser:
             return self.fieldsets
         else:
