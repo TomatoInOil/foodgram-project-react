@@ -65,7 +65,7 @@ jobs:
           script: |
             cd infra/
             docker-compose stop
-            docker-compose rm backend
+            docker-compose rm backend -f
             docker system prune -f
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
