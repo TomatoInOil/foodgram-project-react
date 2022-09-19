@@ -1,11 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from core.admin import AlphabeticalFilter
 from users.models import Subscription, User
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdmin):
     """Настройка админ-панели для модели связи рецепт-ингредиент."""
 
     list_display = (
