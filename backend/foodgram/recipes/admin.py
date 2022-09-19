@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.db.models.aggregates import Count
 
-from recipes.models import Ingredient, Recipe, Tag, IngredientQuantity
+from core.admin import AlphabeticalFilter
+from recipes.models import Ingredient, IngredientQuantity, Recipe, Tag
 
 
 @admin.register(Ingredient)
@@ -9,6 +11,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
     list_display = ("pk", "name", "measurement_unit")
     list_display_links = ("pk", "name")
+    list_filter = (AlphabeticalFilter.setup(field="name"),)
 
 
 @admin.register(Tag)
@@ -26,11 +29,26 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "name",
-        "author",
+        "author__username",
+        "tags",
+        "in_favorites",
         "pub_date",
     )
     list_display_links = ("pk", "name")
+    list_filter = (
+        AlphabeticalFilter.setup(field="name"),
+        AlphabeticalFilter.setup(field="author__username"),
+        "tags",
+    )
     date_hierarchy = "pub_date"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(in_favorites=Count("favoriterecipeslists"))
+
+    def in_favorites(self, obj):
+        """Количество пользователей добавивших рецепт в избранное."""
+        return obj.in_favorites
 
 
 @admin.register(IngredientQuantity)
