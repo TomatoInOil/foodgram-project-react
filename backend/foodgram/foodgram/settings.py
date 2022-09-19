@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+SITE_DOMAIN = os.getenv("SITE_DOMAIN", default="127.0.0.1")
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="v3ry-s3cr3t-k3y")
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "backend"]
 
 
 INSTALLED_APPS = [
@@ -22,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "core.apps.CoreConfig",
     "custom.apps.CustomConfig",
     "services.apps.ServicesConfig",
     "recipes.apps.RecipesConfig",
@@ -106,6 +108,8 @@ USE_L10N = True
 USE_TZ = True
 
 
+STATIC_ROOT = Path.joinpath(BASE_DIR, "static/")
+
 STATIC_URL = "/static/"
 
 
@@ -127,7 +131,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.StandardResultsSetPagination",
     "PAGE_SIZE": 100,
 }
 

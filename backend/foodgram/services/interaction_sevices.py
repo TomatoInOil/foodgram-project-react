@@ -1,5 +1,6 @@
 from typing import Union
 
+from django.conf import settings
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone as tz
@@ -66,7 +67,6 @@ def create_lines_of_text_document_from_shopping_list(shopping_list, request):
         lines.append(
             " ".join([ingredient[0], str(ingredient[1]), ingredient[2]])
         )
-    host = request.get_host()
     year = tz.now().year
-    lines.append(f"{host} {year}")
+    lines.append(f"{settings.SITE_DOMAIN} {year}")
     return lines
