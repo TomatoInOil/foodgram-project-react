@@ -64,9 +64,9 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd infra/
-            sudo docker-compose stop
-            sudo docker-compose rm backend
-            sudo docker system prune -f
+            docker-compose stop
+            docker-compose rm backend
+            docker system prune -f
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -75,7 +75,7 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SITE_DOMAIN=${{ secrets.SITE_DOMAIN }} >> .env
-            sudo docker-compose up -d
+            docker-compose up -d
   
   send_message:
     runs-on: ubuntu-22.04
