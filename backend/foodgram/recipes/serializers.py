@@ -78,9 +78,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         return False
 
     def validate_ingredients(self, value):
-        """Исключает дубликаты ингредиентов в рецепте."""
+        """Проверка на валидность ингредиентов."""
         seen = []
         for ingredient_quantity in value:
+            amount = ingredient_quantity.get("amount")
+            if amount <= 0:
+                raise serializers.ValidationError(
+                    "Количество ингредиента должно быть положительным числом."
+                )
             ingredient = ingredient_quantity.get("ingredient")
             if ingredient in seen:
                 raise serializers.ValidationError(

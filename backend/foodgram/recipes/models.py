@@ -97,6 +97,10 @@ class IngredientQuantity(models.Model):
                 fields=["recipe", "ingredient"],
                 name="excluding_duplicate_ingredients",
             ),
+            models.CheckConstraint(
+                check=models.Q(amount__gt=0),
+                name="amount_of_ingredient_must_be_positive_number",
+            ),
         ]
 
     def __str__(self) -> str:
