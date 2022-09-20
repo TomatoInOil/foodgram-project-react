@@ -27,7 +27,12 @@ class SubscribeView(views.APIView):
         Subscription.objects.create(
             author=result["selected_user"], subscriber=result["current_user"]
         )
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(
+            data=UserWithRecipesSerializer(
+                instance=result["selected_user"], context={"request": request}
+            ).data,
+            status=status.HTTP_201_CREATED,
+        )
 
     def delete(self, request, *args, **kwargs):
         """Отписывает текущего пользователя от автора."""
