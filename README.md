@@ -2,14 +2,11 @@
 ![Foodgram workflow](https://github.com/tomatoinoil/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 ## Оглавление
 1. [Описание проекта](https://github.com/TomatoInOil/foodgram-project-react#описание-проекта)
-2. [Развёрнутый проект](https://github.com/TomatoInOil/foodgram-project-react#развёрнутый-проект)
-3. [Как развернуть?](https://github.com/TomatoInOil/foodgram-project-react#как-развернуть)
+2. [Как развернуть?](https://github.com/TomatoInOil/foodgram-project-react#как-развернуть)
 3. [Примеры запросов и ответов](https://github.com/TomatoInOil/foodgram-project-react#примеры-запросов-и-ответов) 
 4. [Об авторe](https://github.com/TomatoInOil/foodgram-project-react#об-авторe)
 ## Описание проекта
 Приложение **«Продуктовый помощник»**: сайт, на котором пользователи могут *публиковать рецепты*, *добавлять чужие рецепты в избранное* и *подписываться на публикации других авторов*. Сервис **«Список покупок»** позволяет пользователям перед походом в магазин *скачивать сводный список продуктов*, необходимых для приготовления одного или нескольких выбранных блюд.
-## Развёрнутый проект
-Проект доступен по адресу [tomatoinoilfoodgram.ddns.net](https://tomatoinoilfoodgram.ddns.net/). Для проверки ревьюверу `почта;пароль` от администратора: `admin@tomatoinoilfoodgram.ddns.net;N1Dkcf00dgR4m3C8RQTw`.
 ## Как развернуть?
 - Склонировать репозиторий.
 ```BASH
